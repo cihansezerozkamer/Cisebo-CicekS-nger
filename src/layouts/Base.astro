@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppBar from '../components/WhatsAppBar.astro';
+import Splash from '../components/Splash.astro';
 import { site, directionsUrl } from '../data/site';
 import { useLang, langs, langInfo, switchLang, hrefFor, y } from '../i18n';
 
@@ -91,6 +92,7 @@ const jsonLd = [
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
   </head>
   <body>
+    <Splash />
     <a class="skip" href="#icerik">{ui.icerigeGec}</a>
     <Header />
     <main id="icerik">

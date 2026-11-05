@@ -1,0 +1,121 @@
+---
+// Açılış ekranı: ilk girişte 2 sn beyaz zeminde logo animasyonu.
+// - Oturum başına bir kez gösterilir (sessionStorage), sayfa geçişlerinde tekrar çıkmaz.
+// - JavaScript kapalıysa ya da "hareketi azalt" açıksa hiç görünmez.
+import LogoMark from './LogoMark.astro';
+---
+
+<script is:inline>
+  try {
+    if (!sessionStorage.getItem('cs-intro') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('intro');
+    }
+  } catch (e) {}
+</script>
+
+<div class="splash" aria-hidden="true">
+  <div class="splash__in">
+    <LogoMark class="splash__mark" />
+    <span class="splash__word">Çiçek Sünger</span>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var html = document.documentElement;
+    if (!html.classList.contains('intro')) return;
+    try {
+      sessionStorage.setItem('cs-intro', '1');
+    } catch (e) {}
+    setTimeout(function () {
+      html.classList.add('intro-out');
+      setTimeout(function () {
+        html.classList.remove('intro', 'intro-out');
+      }, 500);
+    }, 2000);
+  })();
+</script>
+
+<style is:global>
+  .splash {
+    display: none;
+  }
+  html.intro .splash {
+    display: grid;
+    place-items: center;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #fff;
+    transition: opacity 0.5s ease, visibility 0.5s;
+  }
+  html.intro body {
+    overflow: hidden;
+  }
+  html.intro-out .splash {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .splash__in {
+    display: grid;
+    justify-items: center;
+    gap: 1.1rem;
+  }
+  .splash__mark {
+    width: min(46vw, 15rem);
+    height: auto;
+    animation: splash-pop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+  .splash__mark .logo__flower {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: splash-spin 1.8s cubic-bezier(0.45, 0.05, 0.35, 1) 0.2s both;
+  }
+  .splash__mark .logo__blush {
+    animation: splash-blush 0.8s ease 0.7s both;
+  }
+  .splash__word {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--bordo);
+    animation: splash-word 0.6s ease 0.45s both;
+  }
+  @keyframes splash-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes splash-spin {
+    from {
+      transform: rotate(-72deg);
+    }
+    to {
+      transform: rotate(144deg);
+    }
+  }
+  @keyframes splash-blush {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes splash-word {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
