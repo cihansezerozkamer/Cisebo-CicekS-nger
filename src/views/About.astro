@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import doku from '../assets/img/sunger-doku.jpg';
+import blok from '../assets/img/blok-sunger.jpg';
+import { useLang, y } from '../i18n';
+const { m: all, ui, href, lang } = useLang(Astro.url);
+const m = all.hakkimizdaSayfasi;
+const [ilk, ...diger] = m.paragraflar;
+const crumb = ui.menu.find((x) => x.path === 'hakkimizda')?.label ?? '';
+const alts = {
+  tr: ['Yakından sünger yüzeyi ve gözenekleri', 'Depoda blok sünger'],
+  de: ['Schaumstoffoberfläche mit Poren aus der Nähe', 'Schaumstoffblöcke im Lager'],
+  en: ['Close-up of a foam surface and its pores', 'Foam blocks in the warehouse'],
+}[lang];
+---
+
+<Base title={crumb} description={y(m.googleAciklamasi)}>
+  <section class="page-head wrap">
+    <nav class="crumbs" aria-label={ui.anaSayfa}>
+      <ol>
+        <li><a href={href()}>{ui.anaSayfa}</a></li>
+        <li aria-current="page">{crumb}</li>
+      </ol>
+    </nav>
+    <h1>{y(m.baslik)}</h1>
+  </section>
+
+  <div class="wrap story">
+    <div class="story__text">
+      {ilk && <p class="lead">{y(ilk)}</p>}
+      {diger.map((p) => <p>{y(p)}</p>)}
+      {m.eksikNotu && <p class="todo">{m.eksikNotu}</p>}
+    </div>
+    <div class="story__imgs">
+      <Image src={doku} alt={alts[0]} width={1000} height={800} fit="cover" widths={[500, 1000]} sizes="(max-width: 48rem) 92vw, 40vw" />
+      <Image src={blok} alt={alts[1]} width={1000} height={800} fit="cover" widths={[500, 1000]} sizes="(max-width: 48rem) 92vw, 40vw" />
+    </div>
+  </div>
+</Base>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-bottom: clamp(3.5rem, 8vw, 6rem);
+    align-items: start;
+  }
+  /* yatay görseller, 1000×800 oranında (5:4) */
+  .story__imgs {
+    display: grid;
+    gap: 1rem;
+  }
+  .story__imgs :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--r-pillow);
+    box-shadow: var(--shadow-pillow);
+  }
+  @media (max-width: 47.99rem) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

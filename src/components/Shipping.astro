@@ -1,0 +1,143 @@
+---
+// TIR bazlı kurumsal sevkiyat: nakliye bilgisi ve gönderim yapılan yerler.
+import Icon from './Icon.astro';
+import { waLink } from '../data/site';
+import { useLang } from '../i18n';
+
+interface Props {
+  headingLevel?: 'h2' | 'h3';
+}
+const { headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+const { m: all, ui } = useLang(Astro.url);
+const m = all.sevkiyat;
+---
+
+<div class="ship pillow">
+  <div class="ship__text">
+    <H>{m.baslik}</H>
+    <p>{m.aciklama}</p>
+    <a class="sponge" href={waLink(ui.wa.nakliye)}>
+      <Icon name="whatsapp" />
+      {m.buton}
+    </a>
+  </div>
+
+  <div class="ship__side">
+    <!-- çuvallarla yüklü TIR -->
+    <svg class="ship__truck" viewBox="0 0 320 150" aria-hidden="true">
+      <g stroke="#7a1c33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+        <rect x="10" y="22" width="200" height="92" rx="10" fill="#fffaf8"></rect>
+        <g fill="#f2d688">
+          <rect x="24" y="66" width="38" height="40" rx="12"></rect>
+          <rect x="68" y="66" width="38" height="40" rx="12"></rect>
+          <rect x="112" y="66" width="38" height="40" rx="12"></rect>
+          <rect x="156" y="66" width="38" height="40" rx="12"></rect>
+          <rect x="46" y="32" width="38" height="36" rx="12"></rect>
+          <rect x="90" y="32" width="38" height="36" rx="12"></rect>
+          <rect x="134" y="32" width="38" height="36" rx="12"></rect>
+        </g>
+        <path d="M210 50 h52 l30 34 v30 h-82 z" fill="#cfe7d8"></path>
+        <path d="M226 60 h30 l20 24 h-50 z" fill="#fffaf8" stroke-width="4"></path>
+        <path d="M4 122 h300" stroke-width="4"></path>
+        <g fill="#7a1c33">
+          <circle cx="52" cy="122" r="15"></circle>
+          <circle cx="170" cy="122" r="15"></circle>
+          <circle cx="262" cy="122" r="15"></circle>
+        </g>
+        <g fill="#fffaf8" stroke="none">
+          <circle cx="52" cy="122" r="5"></circle>
+          <circle cx="170" cy="122" r="5"></circle>
+          <circle cx="262" cy="122" r="5"></circle>
+        </g>
+      </g>
+    </svg>
+
+    <h3 class="ship__h">{m.sehirlerBasligi}</h3>
+    <ul class="ship__cities">
+      {
+        m.sehirler.map((c) => (
+          <li>
+            <Icon name="pin" />
+            {c}
+          </li>
+        ))
+      }
+      {
+        m.yurtdisi.map((c) => (
+          <li class="is-abroad">
+            <svg class="ship__flag" viewBox="0 0 30 20" aria-hidden="true">
+              <rect width="30" height="6.67" fill="#000" />
+              <rect y="6.67" width="30" height="6.67" fill="#dd0000" />
+              <rect y="13.33" width="30" height="6.67" fill="#ffce00" />
+            </svg>
+            {c}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<style>
+  .ship {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--krem-sunger);
+    align-items: center;
+  }
+  .ship__text p {
+    font-size: var(--t-lg);
+    margin-bottom: 1.5rem;
+  }
+  .ship__truck {
+    width: min(100%, 22rem);
+    height: auto;
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+  .ship__h {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  .ship__cities {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .ship__cities li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--r-pill);
+    background: var(--beyaz);
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--bordo);
+    box-shadow: inset 0 -2px 0 rgba(150, 120, 60, 0.18);
+  }
+  .ship__cities li :global(svg) {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+  .ship__cities li.is-abroad {
+    background: var(--sunger);
+    color: var(--bordo-koyu);
+  }
+  .ship__flag {
+    width: 1.2rem !important;
+    height: auto !important;
+    border-radius: 2px;
+  }
+  @media (max-width: 47.99rem) {
+    .ship {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

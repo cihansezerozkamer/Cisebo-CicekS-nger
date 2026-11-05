@@ -1,0 +1,297 @@
+---
+// Dolgu hesaplayıcı, iki sekme:
+//  • Kırlent (varsayılan): 55×55 kırlente ~450 g boncuk silikon + kırpıntı karışımı örneğinden ölçeklenir.
+//    gram = 450 × (√(en×boy) / 55)³  → 65×65 için ≈ 740 g (ürün bilgisindeki 750–800 g ile uyumlu)
+//  • Puf / Minder: hacim × yoğunluk (kg/m³). Yoğunluklar yaklaşık, aşağıdan ayarlanır.
+import Icon from './Icon.astro';
+import { waLink } from '../data/site';
+import { useLang } from '../i18n';
+const { m: all, ui, lang } = useLang(Astro.url);
+const m = all.hesaplayici;
+
+interface Props {
+  headingLevel?: 'h2' | 'h3';
+}
+const { headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+
+const kirlent = { refSide: 55, refGram: 450 };
+/** kg / m³: sıkıştırılarak doldurulmuş kırpıntı sünger */
+const density = { yumusak: 18, orta: 24, sert: 30 };
+const locale = { tr: 'tr-TR', de: 'de-DE', en: 'en-GB' }[lang];
+const strings = {
+  locale,
+  aralik: ui.aralik,
+  toplam: ui.kirlentToplam,
+  hesap: ui.wa.hesap,
+  hesapKirlent: ui.wa.hesapKirlent,
+  kutu: ui.wa.hesapKutu,
+  silindir: ui.wa.hesapSilindir,
+  firm: { yumusak: ui.yumusak.toLocaleLowerCase(locale), orta: ui.orta.toLocaleLowerCase(locale), sert: ui.sert.toLocaleLowerCase(locale) },
+};
+---
+
+<div class="calc pillow" id="hesapla" data-calc data-density={JSON.stringify(density)} data-kirlent={JSON.stringify(kirlent)} data-wa={waLink('')} data-i18n={JSON.stringify(strings)}>
+  <div class="calc__intro">
+    <H>{m.baslik}</H>
+    <p class="muted">{m.aciklama}</p>
+  </div>
+
+  <form class="calc__form" onsubmit="return false">
+    <fieldset class="calc__mode">
+      <legend>{ui.hesapTuru}</legend>
+      <label><input type="radio" name="mode" value="kirlent" checked /> <span>{ui.sekmeKirlent}</span></label>
+      <label><input type="radio" name="mode" value="puf" /> <span>{ui.sekmePuf}</span></label>
+    </fieldset>
+
+    <!-- Kırlent -->
+    <div class="calc__dims" data-mode="kirlent">
+      <label>{ui.en}<input name="ken" type="number" inputmode="numeric" min="10" max="200" value="55" /></label>
+      <label>{ui.boy}<input name="kboy" type="number" inputmode="numeric" min="10" max="200" value="55" /></label>
+      <label>{ui.adet}<input name="kadet" type="number" inputmode="numeric" min="1" max="100000" value="1" /></label>
+    </div>
+
+    <!-- Puf / minder -->
+    <fieldset class="calc__shape" data-mode="puf" hidden>
+      <legend>{ui.sekil}</legend>
+      <label><input type="radio" name="shape" value="kutu" checked /> <span>{ui.kutu}</span></label>
+      <label><input type="radio" name="shape" value="silindir" /> <span>{ui.silindir}</span></label>
+    </fieldset>
+    <div class="calc__dims" data-mode="puf" hidden>
+      <label data-for="kutu">{ui.en}<input name="en" type="number" inputmode="numeric" min="1" max="400" value="60" /></label>
+      <label data-for="kutu">{ui.boy}<input name="boy" type="number" inputmode="numeric" min="1" max="400" value="60" /></label>
+      <label data-for="silindir" hidden>{ui.cap}<input name="cap" type="number" inputmode="numeric" min="1" max="400" value="60" /></label>
+      <label>{ui.yukseklik}<input name="yukseklik" type="number" inputmode="numeric" min="1" max="200" value="40" /></label>
+    </div>
+    <fieldset class="calc__firm" data-mode="puf" hidden>
+      <legend>{ui.dolgunluk}</legend>
+      <label><input type="radio" name="firm" value="yumusak" /> <span>{ui.yumusak}</span></label>
+      <label><input type="radio" name="firm" value="orta" checked /> <span>{ui.orta}</span></label>
+      <label><input type="radio" name="firm" value="sert" /> <span>{ui.sert}</span></label>
+    </fieldset>
+  </form>
+
+  <output class="calc__out" aria-live="polite">
+    <span class="calc__kg" data-mode="kirlent"><b data-g>450</b> <span class="calc__unit">{ui.kirlentSonuc}</span></span>
+    <span class="calc__kg" data-mode="puf" hidden><b data-kg>3,5</b> kg</span>
+    <span class="calc__range muted" data-range></span>
+  </output>
+
+  <a class="sponge calc__send" href="#" data-send>
+    <Icon name="whatsapp" />
+    {m.buton}
+  </a>
+  <p class="calc__note muted" data-mode="kirlent">{m.kirlentNot}</p>
+  <p class="calc__note muted" data-mode="puf" hidden>{m.not}</p>
+</div>
+
+<script>
+  const half = (n: number) => Math.max(0.5, Math.round(n * 2) / 2);
+  const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_, k) => String(v[k] ?? ''));
+
+  document.querySelectorAll<HTMLElement>('[data-calc]').forEach((root) => {
+    const form = root.querySelector('form')!;
+    const density = JSON.parse(root.dataset.density!) as Record<string, number>;
+    const ref = JSON.parse(root.dataset.kirlent!) as { refSide: number; refGram: number };
+    const t = JSON.parse(root.dataset.i18n!) as {
+      locale: string; aralik: string; toplam: string; hesap: string; hesapKirlent: string; kutu: string; silindir: string; firm: Record<string, string>;
+    };
+    const fmt = (n: number) => n.toLocaleString(t.locale, { maximumFractionDigits: 1 });
+    const waBase = root.dataset.wa!;
+    const gEl = root.querySelector('[data-g]')!;
+    const kgEl = root.querySelector('[data-kg]')!;
+    const rangeEl = root.querySelector('[data-range]')!;
+    const send = root.querySelector<HTMLAnchorElement>('[data-send]')!;
+    const num = (name: string) => Number((form.elements.namedItem(name) as HTMLInputElement).value) || 0;
+    const radio = (name: string) => (form.querySelector(`input[name="${name}"]:checked`) as HTMLInputElement).value;
+
+    const update = () => {
+      const mode = radio('mode');
+      root.querySelectorAll<HTMLElement>('[data-mode]').forEach((el) => (el.hidden = el.dataset.mode !== mode));
+
+      if (mode === 'kirlent') {
+        const en = num('ken');
+        const boy = num('kboy');
+        const adet = Math.max(1, Math.round(num('kadet')));
+        const side = Math.sqrt(en * boy);
+        const g = Math.max(10, Math.round((ref.refGram * Math.pow(side / ref.refSide, 3)) / 10) * 10);
+        gEl.textContent = fmt(g);
+        rangeEl.textContent = adet > 1 ? fill(t.toplam, { adet: fmt(adet), kg: fmt(Math.round((g * adet) / 100) / 10) }) : '';
+        send.href = waBase + encodeURIComponent(fill(t.hesapKirlent, { adet: fmt(adet), en, boy, g: fmt(g) }));
+        return;
+      }
+
+      const shape = radio('shape');
+      const firm = radio('firm');
+      root.querySelectorAll<HTMLElement>('[data-for]').forEach((el) => (el.hidden = el.dataset.for !== shape));
+      const h = num('yukseklik');
+      let litre: number;
+      let olcu: string;
+      if (shape === 'silindir') {
+        const r = num('cap') / 2;
+        litre = (Math.PI * r * r * h) / 1000;
+        olcu = fill(t.silindir, { cap: num('cap'), h });
+      } else {
+        litre = (num('en') * num('boy') * h) / 1000;
+        olcu = fill(t.kutu, { en: num('en'), boy: num('boy'), h });
+      }
+      const kg = (litre / 1000) * density[firm];
+      const shown = half(kg);
+      kgEl.textContent = fmt(shown);
+      rangeEl.textContent = fill(t.aralik, { min: fmt(half(kg * 0.85)), max: fmt(half(kg * 1.15)), litre: fmt(Math.round(litre)) });
+      send.href = waBase + encodeURIComponent(fill(t.hesap, { olcu, dolgu: t.firm[firm], kg: fmt(shown) }));
+    };
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    update();
+  });
+</script>
+
+<style>
+  .calc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'intro out'
+      'form out'
+      'form send'
+      'form note';
+    gap: 1.25rem 2.5rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--mint);
+  }
+  .calc__intro {
+    grid-area: intro;
+  }
+  .calc__intro p {
+    margin: 0;
+  }
+  .calc__form {
+    grid-area: form;
+    display: grid;
+    gap: 1.25rem;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  legend {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--bordo-koyu);
+  }
+  fieldset label {
+    position: relative;
+  }
+  fieldset input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+  fieldset span {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    border-radius: 1rem;
+    background: var(--krem-sunger);
+    color: var(--bordo);
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: inset 0 -3px 0 rgba(150, 120, 60, 0.2);
+    transition: transform 0.15s;
+  }
+  fieldset input:checked + span {
+    background: var(--sunger-koyu);
+    color: var(--bordo-koyu);
+    box-shadow: inset 0 -3px 0 rgba(150, 105, 20, 0.4);
+  }
+  fieldset input:focus-visible + span {
+    outline: 3px solid var(--bordo);
+    outline-offset: 2px;
+  }
+  fieldset label:active span {
+    transform: scale(1.04, 0.9);
+  }
+  .calc__dims {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+  .calc__dims label {
+    display: grid;
+    gap: 0.3rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--bordo-koyu);
+  }
+  .calc [hidden] {
+    display: none !important;
+  }
+  .calc__mode span {
+    font-size: 1.02rem;
+    padding: 0.65rem 1.2rem;
+  }
+  .calc__unit {
+    font-size: 0.45em;
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .calc__dims label[hidden] {
+    display: none;
+  }
+  .calc__dims input {
+    width: 100%;
+    font: 600 1.1rem var(--font-body);
+    padding: 0.7rem 0.85rem;
+    border: 2px solid transparent;
+    border-radius: 0.9rem;
+    background: var(--beyaz);
+    color: var(--ink);
+  }
+  .calc__dims input:focus {
+    outline: none;
+    border-color: var(--bordo);
+  }
+  .calc__out {
+    grid-area: out;
+    align-self: end;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .calc__kg {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-size: clamp(3.5rem, 9vw, 6rem);
+    line-height: 1;
+    color: var(--bordo);
+    font-weight: 600;
+  }
+  .calc__kg b {
+    font-weight: 700;
+  }
+  .calc__send {
+    grid-area: send;
+    justify-self: start;
+    align-self: start;
+  }
+  .calc__note {
+    grid-area: note;
+    font-size: var(--t-sm);
+    margin: 0;
+  }
+  @media (max-width: 47.99rem) {
+    .calc {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'intro' 'form' 'out' 'send' 'note';
+    }
+    .calc__send {
+      justify-self: stretch;
+    }
+  }
+</style>

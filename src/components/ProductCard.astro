@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import type { Product } from '../data/products';
+import { useLang } from '../i18n';
+
+interface Props {
+  product: Product;
+  size?: 'lg' | 'md';
+}
+const { product: p, size = 'md' } = Astro.props;
+const { ui, href } = useLang(Astro.url);
+const img = p.images[0];
+---
+
+<a class={`card card--${size} tone-${p.tone}`} href={href(`urunler/${p.slug}`)}>
+  <div class="card__media">
+    {
+      img ? (
+        <Image src={img.src} alt={img.alt} widths={[360, 560, 820]} sizes="(max-width: 48rem) 92vw, 34vw" />
+      ) : (
+        <div class="card__ph" aria-hidden="true">
+          <svg viewBox="0 0 200 140">
+            <path d="M28 30 Q100 12 172 30 Q188 70 172 110 Q100 128 28 110 Q12 70 28 30Z" />
+          </svg>
+          <span>{ui.fotoYakinda}</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="card__body">
+    <h3>{p.name}</h3>
+    <p>{p.short}</p>
+    <ul class="units" aria-label={ui.satisBirimi}>
+      {p.units.map((u) => <li>{ui.birimler[u]}</li>)}
+    </ul>
+  </div>
+</a>
+
+<style>
+  .card {
+    --tone: var(--krem);
+    display: flex;
+    flex-direction: column;
+    background: var(--tone);
+    border-radius: var(--r-pillow);
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: var(--shadow-pillow);
+    transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+  }
+  .card:hover {
+    transform: translateY(-3px) scale(1.01);
+  }
+  .card:active {
+    transform: scale(0.985, 0.97);
+  }
+  .tone-mint {
+    --tone: var(--mint);
+  }
+  .tone-sari {
+    --tone: var(--sari);
+  }
+  .tone-krem {
+    --tone: var(--krem);
+  }
+  .tone-gri {
+    --tone: var(--gri);
+  }
+  .tone-pembe {
+    --tone: var(--pembe-acik);
+  }
+
+  .card__media {
+    aspect-ratio: 4 / 3;
+    margin: 0.6rem 0.6rem 0;
+    border-radius: calc(var(--r-pillow) - 0.6rem);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--tone) 70%, #fff);
+  }
+  .card--lg .card__media {
+    aspect-ratio: 5 / 4;
+  }
+  .card__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card__ph {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 0.4rem;
+  }
+  .card__ph svg {
+    width: 52%;
+    fill: color-mix(in srgb, var(--tone) 55%, #fff);
+    stroke: color-mix(in srgb, var(--bordo) 25%, transparent);
+    stroke-width: 2;
+    stroke-dasharray: 5 6;
+  }
+  .card__ph span {
+    font-size: var(--t-sm);
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .card__body {
+    padding: 1rem 1.25rem 1.3rem;
+    display: grid;
+    gap: 0.5rem;
+    flex: 1;
+    align-content: start;
+  }
+  .card__body h3 {
+    margin: 0;
+  }
+  .card--lg .card__body h3 {
+    font-size: var(--t-xl);
+  }
+  .card__body p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card:hover,
+    .card:active {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

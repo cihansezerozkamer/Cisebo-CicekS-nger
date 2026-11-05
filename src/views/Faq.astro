@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import { useLang, y } from '../i18n';
+const { m: all, ui, href, products } = useLang(Astro.url);
+const m = all.sssSayfasi;
+const crumb = ui.menu.find((x) => x.path === 'sss')?.label ?? m.baslik;
+const fromProducts = products.flatMap((p) => p.faq.slice(0, 1).map((f) => ({ ...f, slug: p.slug, name: p.name })));
+---
+
+<Base title={m.baslik} description={m.googleAciklamasi}>
+  <section class="page-head wrap">
+    <nav class="crumbs" aria-label={ui.anaSayfa}>
+      <ol>
+        <li><a href={href()}>{ui.anaSayfa}</a></li>
+        <li aria-current="page">{crumb}</li>
+      </ol>
+    </nav>
+    <h1>{m.baslik}</h1>
+  </section>
+
+  <div class="wrap body">
+    <section class="faq">
+      <h2>{m.siparisBasligi}</h2>
+      {
+        m.siparisSorulari.map((f) => (
+          <details>
+            <summary>{y(f.soru)}</summary>
+            <p>{y(f.cevap)}</p>
+          </details>
+        ))
+      }
+    </section>
+    <section class="faq">
+      <h2>{m.urunlerBasligi}</h2>
+      {
+        fromProducts.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>
+              {f.a} <a href={href(`urunler/${f.slug}`)}>{f.name}</a>
+            </p>
+          </details>
+        ))
+      }
+    </section>
+  </div>
+</Base>
+
+<style>
+  .body {
+    display: grid;
+    gap: 3rem;
+    max-width: 48rem;
+    padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  }
+</style>

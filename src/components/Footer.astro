@@ -1,0 +1,115 @@
+---
+import Logo from './Logo.astro';
+import { site, addressLine, telLink, waLink, officeWaLink } from '../data/site';
+import { useLang, y } from '../i18n';
+
+const { m, ui, href, products } = useLang(Astro.url);
+const year = new Date().getFullYear();
+---
+
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div>
+      <Logo />
+      <p class="ftr__tag">{m.altBilgi.etiket}</p>
+      <p class="ftr__addr">{addressLine}</p>
+      <p>
+        {ui.telefon}: <a href={telLink()}>{site.phoneDisplay}</a><br />
+        {ui.whatsappEtiket}: <a href={waLink(ui.wa.bilgi)}>{site.whatsappDisplay}</a><br />
+        {ui.ofisYetkilisi}: <a href={officeWaLink(ui.wa.bilgi)}>{site.office.display}</a>
+      </p>
+      <p class="ftr__store">
+        {ui.onlineMagaza}: <strong>{site.storeName}</strong>
+        {
+          site.onlineStores.map((s, i) => (
+            <>
+              {i === 0 ? ' (' : ', '}
+              {s.url ? (
+                <a href={s.url} target="_blank" rel="noopener">
+                  {s.name}
+                </a>
+              ) : (
+                s.name
+              )}
+              {i === site.onlineStores.length - 1 ? ')' : ''}
+            </>
+          ))
+        }
+      </p>
+    </div>
+    <nav aria-label={ui.altUrunler}>
+      <h2 class="ftr__h">{ui.altUrunler}</h2>
+      <ul>
+        {products.map((p) => <li><a href={href(`urunler/${p.slug}`)}>{p.name}</a></li>)}
+      </ul>
+    </nav>
+    <nav aria-label={ui.altSayfalar}>
+      <h2 class="ftr__h">{ui.altSayfalar}</h2>
+      <ul>
+        {ui.menu.filter((n) => n.path !== 'urunler').map((n) => <li><a href={href(n.path)}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap ftr__base">
+    <small>© {year} {site.name}. {y(m.altBilgi.telif)}</small>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    background: var(--bordo-koyu);
+    color: var(--pembe);
+    padding-block: 3.5rem 1.5rem;
+  }
+  .ftr :global(.logo) {
+    color: var(--pembe-acik);
+  }
+  .ftr a {
+    color: var(--pembe-acik);
+  }
+  .ftr__tag,
+  .ftr__addr,
+  .ftr__store {
+    color: var(--pembe-koyu);
+    max-width: 34ch;
+  }
+  .ftr__tag {
+    margin-top: 0.75rem;
+  }
+  .ftr__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .ftr__h {
+    font-size: 1.1rem;
+    color: var(--sari);
+  }
+  .ftr ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ftr ul a {
+    text-decoration: none;
+  }
+  .ftr ul a:hover {
+    text-decoration: underline;
+  }
+  .ftr__base {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(246, 220, 220, 0.2);
+    color: var(--pembe-koyu);
+  }
+  @media (max-width: 47.99rem) {
+    .ftr__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ftr__grid > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

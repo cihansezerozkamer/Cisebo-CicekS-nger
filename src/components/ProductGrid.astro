@@ -1,0 +1,41 @@
+---
+import ProductCard from './ProductCard.astro';
+import { useLang } from '../i18n';
+// İlk iki ürün (en çok satılanlar) büyük kartla gösterilir.
+const { products } = useLang(Astro.url);
+---
+
+<div class="pgrid">
+  {products.map((p, i) => <ProductCard product={p} size={i < 2 ? 'lg' : 'md'} />)}
+</div>
+
+<style>
+  .pgrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(0.9rem, 2vw, 1.4rem);
+  }
+  .pgrid > :global(*) {
+    grid-column: span 2;
+  }
+  .pgrid > :global(:nth-child(-n + 2)) {
+    grid-column: span 3;
+  }
+  @media (max-width: 63.99rem) {
+    .pgrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pgrid > :global(*),
+    .pgrid > :global(:nth-child(-n + 2)) {
+      grid-column: span 1;
+    }
+    .pgrid > :global(:last-child:nth-child(odd)) {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 35rem) {
+    .pgrid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

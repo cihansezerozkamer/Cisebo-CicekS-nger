@@ -1,0 +1,85 @@
+---
+// Bayraklı dil seçici: TR / DE / EN. Aynı sayfanın diğer dildeki adresine gider.
+import { langs, langInfo, switchLang, useLang } from '../i18n';
+const { lang, ui } = useLang(Astro.url);
+---
+
+<nav class="ls" aria-label={ui.dil}>
+  {
+    langs.map((l) => (
+      <a
+        href={switchLang(Astro.url, l)}
+        hreflang={langInfo[l].htmlLang}
+        lang={langInfo[l].htmlLang}
+        aria-current={l === lang ? 'true' : undefined}
+        title={langInfo[l].name}
+      >
+        {l === 'tr' && (
+          <svg viewBox="0 0 30 20" aria-hidden="true">
+            <rect width="30" height="20" fill="#e30a17" />
+            <circle cx="11" cy="10" r="5" fill="#fff" />
+            <circle cx="12.25" cy="10" r="4" fill="#e30a17" />
+            <path fill="#fff" d="m16.2 10 3.6-1.17-2.23 3.06V8.11l2.23 3.06z" />
+          </svg>
+        )}
+        {l === 'de' && (
+          <svg viewBox="0 0 30 20" aria-hidden="true">
+            <rect width="30" height="6.67" fill="#000" />
+            <rect y="6.67" width="30" height="6.67" fill="#dd0000" />
+            <rect y="13.33" width="30" height="6.67" fill="#ffce00" />
+          </svg>
+        )}
+        {l === 'en' && (
+          <svg viewBox="0 0 60 40" aria-hidden="true">
+            <clipPath id="ls-uk">
+              <rect width="60" height="40" />
+            </clipPath>
+            <g clip-path="url(#ls-uk)">
+              <rect width="60" height="40" fill="#012169" />
+              <path d="M0 0l60 40M60 0L0 40" stroke="#fff" stroke-width="8" />
+              <path d="M0 0l60 40M60 0L0 40" stroke="#c8102e" stroke-width="3" />
+              <path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="12" />
+              <path d="M30 0v40M0 20h60" stroke="#c8102e" stroke-width="7" />
+            </g>
+          </svg>
+        )}
+        <span>{langInfo[l].label}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .ls {
+    display: flex;
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border-radius: var(--r-pill);
+    background: var(--pembe-acik);
+  }
+  .ls a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--r-pill);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .ls a:hover {
+    color: var(--bordo);
+  }
+  .ls a[aria-current='true'] {
+    background: var(--sunger);
+    color: var(--bordo-koyu);
+    box-shadow: inset 0 -2px 0 rgba(150, 105, 20, 0.3);
+  }
+  .ls svg {
+    width: 1.15rem;
+    height: auto;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  }
+</style>

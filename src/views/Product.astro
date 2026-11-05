@@ -1,0 +1,254 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import Icon from '../components/Icon.astro';
+import type { Product } from '../data/products';
+import { waLink, telLink, site } from '../data/site';
+import { useLang } from '../i18n';
+
+interface Props {
+  slug: string;
+}
+const { m: all, ui, href, bySlug } = useLang(Astro.url);
+const m = all.urunSayfasi;
+const p = bySlug(Astro.props.slug)!;
+const related = p.related.map(bySlug).filter(Boolean) as Product[];
+const og = p.images[0] ? (await getImage({ src: p.images[0].src, width: 1200, format: 'jpg' })).src : undefined;
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: ui.anaSayfa, item: new URL(href(), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: all.urunlerSayfasi.baslik, item: new URL(href('urunler'), Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: p.name, item: new URL(href(`urunler/${p.slug}`), Astro.site).href },
+  ],
+};
+---
+
+<Base title={p.name} description={`${p.intro} WhatsApp: ${site.phoneDisplay}`} schema={[breadcrumb]} waMessage={p.priceMessage} ogImage={og}>
+  <article class="wrap prod">
+    <nav class="crumbs" aria-label={ui.anaSayfa}>
+      <ol>
+        <li><a href={href()}>{ui.anaSayfa}</a></li>
+        <li><a href={href('urunler')}>{all.urunlerSayfasi.baslik}</a></li>
+        <li aria-current="page">{p.name}</li>
+      </ol>
+    </nav>
+
+    <div class="prod__top">
+      <div class={`prod__gallery tone-${p.tone}`}>
+        {
+          p.images.length ? (
+            p.images.map((im, i) => (
+              <Image
+                src={im.src}
+                alt={im.alt}
+                widths={[480, 800, 1200]}
+                sizes={i === 0 ? '(max-width: 48rem) 92vw, 46vw' : '(max-width: 48rem) 45vw, 22vw'}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                class={i === 0 ? 'is-main' : ''}
+              />
+            ))
+          ) : (
+            <div class="prod__ph">
+              <span>{ui.fotoYakinda}</span>
+            </div>
+          )
+        }
+      </div>
+
+      <div class="prod__info">
+        <h1>{p.name}</h1>
+        <p class="lead">{p.intro}</p>
+        <ul class="units" aria-label={ui.satisBirimi}>
+          {p.units.map((u) => <li>{ui.birimler[u]}</li>)}
+        </ul>
+
+        <dl class="prod__specs">
+          {p.specs.map((s) => (
+            <div>
+              <dt>{s.label}</dt>
+              <dd>{s.value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="prod__cta">
+          <a class="sponge" href={waLink(p.priceMessage)}>
+            <Icon name="whatsapp" />
+            {m.fiyatButonu}
+          </a>
+          <a class="sponge sponge--light" href={telLink()}>
+            <Icon name="phone" />
+            {m.araButonu}
+          </a>
+        </div>
+        <p class="muted prod__note">{m.fiyatNotu}</p>
+      </div>
+    </div>
+
+    <section class="prod__uses">
+      <h2>{m.kullanimBasligi}</h2>
+      <ul>
+        {p.uses.map((u) => <li>{u}</li>)}
+      </ul>
+    </section>
+
+    <section class="prod__faq faq">
+      <h2>{m.sssBasligi}</h2>
+      {
+        p.faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))
+      }
+    </section>
+
+    {
+      related.length > 0 && (
+        <section class="prod__rel">
+          <h2>{m.benzerBasligi}</h2>
+          <div class="prod__relgrid">
+            {related.map((r) => (
+              <ProductCard product={r} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .prod {
+    padding-block: clamp(2rem, 5vw, 3.5rem) clamp(3.5rem, 8vw, 6rem);
+  }
+  .prod__top {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .prod__gallery {
+    --tone: var(--krem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    padding: 0.6rem;
+    border-radius: var(--r-pillow);
+    background: var(--tone);
+    box-shadow: var(--shadow-pillow);
+  }
+  .tone-mint {
+    --tone: var(--mint);
+  }
+  .tone-sari {
+    --tone: var(--sari);
+  }
+  .tone-gri {
+    --tone: var(--gri);
+  }
+  .tone-pembe {
+    --tone: var(--pembe-acik);
+  }
+  .prod__gallery :global(img) {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: calc(var(--r-pillow) - 0.6rem);
+  }
+  .prod__gallery :global(img.is-main) {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3.4;
+  }
+  .prod__gallery :global(img:only-child) {
+    aspect-ratio: 4 / 4.4;
+  }
+  .prod__ph {
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3.4;
+    display: grid;
+    place-items: center;
+    border-radius: calc(var(--r-pillow) - 0.6rem);
+    border: 2px dashed color-mix(in srgb, var(--bordo) 30%, transparent);
+    color: var(--ink-soft);
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem;
+  }
+  .prod__info h1 {
+    font-size: clamp(2.2rem, 4.6vw, 3.4rem);
+  }
+  .prod__specs {
+    margin: 1.5rem 0;
+    display: grid;
+    gap: 0;
+  }
+  .prod__specs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1.5px solid var(--pembe-koyu);
+  }
+  .prod__specs dt {
+    font-weight: 700;
+    color: var(--bordo);
+  }
+  .prod__specs dd {
+    margin: 0;
+    text-align: right;
+  }
+  .prod__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .prod__note {
+    font-size: var(--t-sm);
+    margin-top: 0.75rem;
+  }
+  .prod__uses,
+  .prod__faq,
+  .prod__rel {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+  .prod__uses ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .prod__uses li {
+    padding: 0.6rem 1.1rem;
+    background: var(--pembe-acik);
+    border-radius: 1rem;
+    font-weight: 600;
+  }
+  .prod__faq {
+    max-width: 48rem;
+  }
+  .prod__relgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.25rem;
+  }
+  @media (max-width: 47.99rem) {
+    .prod__top {
+      grid-template-columns: 1fr;
+    }
+    .prod__relgrid {
+      grid-template-columns: 1fr;
+    }
+    .prod__cta > :global(*) {
+      flex: 1;
+    }
+  }
+</style>

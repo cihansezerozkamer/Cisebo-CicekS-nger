@@ -1,0 +1,157 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import VideoStrip from '../components/VideoStrip.astro';
+import Shipping from '../components/Shipping.astro';
+import { waLink, telLink, site } from '../data/site';
+import plakaIstif from '../assets/img/plaka-istif.jpg';
+import { useLang } from '../i18n';
+const { m: all, ui, href, bySlug } = useLang(Astro.url);
+const m = all.toptanSayfasi;
+const crumb = ui.menu.find((x) => x.path === 'toptan')?.label ?? m.baslik;
+const imgAlt = bySlug('kiloluk-sunger')?.images[0]?.alt ?? '';
+---
+
+<Base title={m.googleBasligi} description={m.googleAciklamasi} waMessage={ui.wa.toptan}>
+  <section class="page-head wrap top">
+    <div>
+      <nav class="crumbs" aria-label={ui.anaSayfa}>
+        <ol>
+          <li><a href={href()}>{ui.anaSayfa}</a></li>
+          <li aria-current="page">{crumb}</li>
+        </ol>
+      </nav>
+      <h1>{m.baslik}</h1>
+      <p class="lead">{m.aciklama}</p>
+      <div class="cta">
+        <a class="sponge" href={waLink(ui.wa.toptan)}>
+          <Icon name="whatsapp" />
+          {m.whatsappButonu}
+        </a>
+        <a class="sponge sponge--light" href={telLink()}>
+          <Icon name="phone" />
+          {site.phoneDisplay}
+        </a>
+      </div>
+    </div>
+    <Image src={plakaIstif} alt={imgAlt} widths={[480, 800]} sizes="(max-width: 48rem) 92vw, 40vw" class="top__img" loading="eager" />
+  </section>
+
+  <div class="wrap body">
+    <Shipping />
+
+    <section>
+      <h2>{m.kimlerBasligi}</h2>
+      <ul class="who">
+        {
+          m.kimler.map((w) => (
+            <li>
+              <h3>{w.baslik}</h3>
+              <p>{w.aciklama}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>{m.adimlarBasligi}</h2>
+      <ol class="steps">
+        {m.adimlar.map((s) => <li>{s}</li>)}
+      </ol>
+    </section>
+
+    <section>
+      <h2>{m.videoBasligi}</h2>
+      <VideoStrip />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .top {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .top :global(.top__img) {
+    width: 100%;
+    max-width: 30rem;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    justify-self: end;
+    border-radius: var(--r-pillow);
+    box-shadow: 0 0 0 0.6rem var(--pembe-acik), var(--shadow-pillow);
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(3rem, 7vw, 5rem);
+    padding-bottom: clamp(3.5rem, 8vw, 6rem);
+  }
+  .who {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+    gap: 1rem;
+  }
+  .who li {
+    padding: 1.25rem 1.35rem;
+    border-radius: var(--r-soft);
+    background: var(--pembe-acik);
+  }
+  .who p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .steps {
+    counter-reset: s;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+    max-width: 44rem;
+  }
+  .steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: center;
+    gap: 1rem;
+    font-size: var(--t-lg);
+  }
+  .steps li::before {
+    content: counter(s);
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.1rem;
+    background: var(--bordo);
+    color: var(--pembe-acik);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  @media (max-width: 47.99rem) {
+    .top {
+      grid-template-columns: 1fr;
+    }
+    .top :global(.top__img) {
+      max-width: 18rem;
+      justify-self: center;
+    }
+  }
+</style>

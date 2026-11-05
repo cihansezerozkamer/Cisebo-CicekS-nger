@@ -12,3 +12,11 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+node_modules
+
+# Web için küçültülmüş videolar depoya girer
+!public/video/*.mp4
+
+# Astro
+dist/
+.astro/

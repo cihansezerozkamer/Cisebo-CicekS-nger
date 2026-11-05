@@ -1,0 +1,139 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppBar from '../components/WhatsAppBar.astro';
+import { site, directionsUrl } from '../data/site';
+import { useLang, langs, langInfo, switchLang, hrefFor, y } from '../i18n';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Ek JSON-LD blokları (ör. BreadcrumbList) */
+  schema?: Record<string, unknown>[];
+  waMessage?: string;
+  ogImage?: string;
+  /** ana sayfa mı (başlık biçimi değişir) */
+  home?: boolean;
+}
+
+const { lang, m, ui } = useLang(Astro.url);
+const { title, description = y(m.giris.aciklama), schema = [], waMessage, ogImage, home = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const homeUrl = new URL(hrefFor('', 'tr'), Astro.site).href;
+const fullTitle = home ? `${site.name} | ${ui.siteBasligi}` : `${title} | ${site.name}`;
+
+const a = site.address;
+const dayCodes = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${homeUrl}#isletme`,
+  name: site.name,
+  alternateName: site.googleName,
+  description: y(m.giris.aciklama),
+  url: homeUrl,
+  telephone: site.phoneE164,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${a.neighborhood} ${a.street}`,
+    addressLocality: a.district,
+    addressRegion: a.city,
+    postalCode: a.postalCode,
+    addressCountry: a.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+  hasMap: directionsUrl,
+  openingHoursSpecification: site.hours.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.days.map((d) => `https://schema.org/${dayCodes[d - 1]}`),
+    opens: h.open,
+    closes: h.close,
+  })),
+  areaServed: ['TR', 'DE'],
+};
+const jsonLd = [
+  localBusiness,
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: homeUrl, inLanguage: langInfo[lang].htmlLang },
+  ...schema,
+];
+---
+
+<!doctype html>
+<html lang={langInfo[lang].htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {langs.map((l) => <link rel="alternate" hreflang={langInfo[l].htmlLang} href={new URL(switchLang(Astro.url, l), Astro.site).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(switchLang(Astro.url, 'tr'), Astro.site).href} />
+    <meta name="theme-color" content="#f6dcdc" />
+    <link rel="icon" href={hrefFor('favicon.svg', 'tr')} type="image/svg+xml" />
+    <link rel="sitemap" href={hrefFor('sitemap-index.xml', 'tr')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={langInfo[lang].og} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site).href} />}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Manrope:wght@400..800&display=swap"
+    />
+
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#icerik">{ui.icerigeGec}</a>
+    <Header />
+    <main id="icerik">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppBar message={waMessage} />
+
+    <script>
+      // Süngerimsi buton: basınca içe göç, bırakınca geri zıpla.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let active: HTMLElement | null = null;
+
+      const release = () => {
+        if (!active) return;
+        const el = active;
+        active = null;
+        el.classList.remove('is-pressed');
+        if (reduce.matches) return;
+        el.classList.remove('is-rebound');
+        void el.offsetWidth; // animasyonu yeniden başlat
+        el.classList.add('is-rebound');
+        el.addEventListener('animationend', () => el.classList.remove('is-rebound'), { once: true });
+      };
+
+      document.addEventListener('pointerdown', (e) => {
+        const el = (e.target as Element).closest<HTMLElement>('.sponge');
+        if (!el) return;
+        active = el;
+        el.classList.remove('is-rebound');
+        el.classList.add('is-pressed');
+      });
+      document.addEventListener('pointerup', release);
+      document.addEventListener('pointercancel', release);
+      document.addEventListener('keydown', (e) => {
+        if (e.repeat || (e.key !== 'Enter' && e.key !== ' ')) return;
+        const el = (e.target as Element).closest<HTMLElement>('.sponge');
+        if (el) {
+          active = el;
+          el.classList.add('is-pressed');
+          setTimeout(release, 110);
+        }
+      });
+    </script>
+  </body>
+</html>

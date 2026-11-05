@@ -1,0 +1,73 @@
+---
+// Mobilde her sayfanın altında duran WhatsApp çubuğu, masaüstünde yuvarlak buton.
+import Icon from './Icon.astro';
+import { waLink, telLink } from '../data/site';
+import { useLang } from '../i18n';
+interface Props {
+  message?: string;
+}
+const { ui } = useLang(Astro.url);
+const { message = ui.wa.siparis } = Astro.props;
+---
+
+<div class="wabar" role="region" aria-label={ui.hizliIletisim}>
+  <a class="sponge wabar__wa" href={waLink(message)}>
+    <Icon name="whatsapp" />
+    <span>{ui.whatsappSiparis}</span>
+  </a>
+  <a class="sponge sponge--light wabar__tel" href={telLink()} aria-label={ui.telefonlaAra}>
+    <Icon name="phone" />
+  </a>
+</div>
+
+<style>
+  .wabar {
+    position: fixed;
+    z-index: 50;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .wabar__tel {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .wabar__wa {
+      width: 3.6rem;
+      height: 3.6rem;
+      padding: 0;
+      border-radius: 1.5rem;
+    }
+    .wabar__wa span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .wabar__wa :global(svg) {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .wabar {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0.65rem var(--gutter) calc(0.65rem + env(safe-area-inset-bottom));
+      background: color-mix(in srgb, var(--pembe) 92%, transparent);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 -10px 24px -18px rgba(79, 16, 34, 0.5);
+    }
+    .wabar__wa {
+      flex: 1;
+    }
+    .wabar__tel {
+      display: inline-flex;
+      padding-inline: 1.05rem;
+    }
+  }
+</style>

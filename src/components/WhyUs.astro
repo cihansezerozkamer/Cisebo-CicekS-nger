@@ -1,0 +1,47 @@
+---
+import { useLang, y } from '../i18n';
+const { m } = useLang(Astro.url);
+---
+
+<ul class="why">
+  {
+    m.neden.map((i) => (
+      <li>
+        <h3>{y(i.baslik)}</h3>
+        <p>{y(i.aciklama)}</p>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .why {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .why li {
+    padding-top: 1.1rem;
+    border-top: 3px solid var(--bordo);
+  }
+  .why h3 {
+    font-size: 1.35rem;
+  }
+  .why p {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  @media (max-width: 63.99rem) {
+    .why {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 35rem) {
+    .why {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

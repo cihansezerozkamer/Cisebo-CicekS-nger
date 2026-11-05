@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactBlock from '../components/ContactBlock.astro';
+import { site, addressLine } from '../data/site';
+import { useLang } from '../i18n';
+const { m: all, ui, href } = useLang(Astro.url);
+const m = all.iletisimSayfasi;
+---
+
+<Base title={m.baslik} description={`${site.name}: ${addressLine}. ${ui.telefon}: ${site.phoneDisplay}`}>
+  <section class="page-head wrap">
+    <nav class="crumbs" aria-label={ui.anaSayfa}>
+      <ol>
+        <li><a href={href()}>{ui.anaSayfa}</a></li>
+        <li aria-current="page">{m.baslik}</li>
+      </ol>
+    </nav>
+    <h1>{m.baslik}</h1>
+    <p class="lead">{m.aciklama}</p>
+  </section>
+  <div class="wrap" style="padding-bottom: clamp(3.5rem, 8vw, 6rem)">
+    <ContactBlock />
+  </div>
+</Base>

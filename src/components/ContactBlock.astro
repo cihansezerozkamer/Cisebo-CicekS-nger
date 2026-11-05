@@ -1,0 +1,140 @@
+---
+// Adres, saatler ve harita. Kaynak: site.ts (Google Haritalar kaydıyla aynı)
+import Icon from './Icon.astro';
+import { site, addressLine, mapEmbedUrl, directionsUrl, telLink, waLink, officeWaLink } from '../data/site';
+import { useLang } from '../i18n';
+const { m, ui } = useLang(Astro.url);
+
+const dayName = (d: number) => ui.gunler[d - 1];
+const range = (days: number[]) => (days.length > 1 ? `${dayName(days[0])}–${dayName(days[days.length - 1])}` : dayName(days[0]));
+---
+
+<div class="contact">
+  <div class="contact__info">
+    <h2>{m.iletisimBlogu.baslik}</h2>
+    <dl>
+      <div>
+        <dt><Icon name="pin" /> {ui.adres}</dt>
+        <dd>{addressLine}</dd>
+      </div>
+      <div>
+        <dt><Icon name="clock" /> {ui.saatler}</dt>
+        <dd>
+          <ul>
+            {
+              site.hours.map((h) => (
+                <li>
+                  <span>{range(h.days)}</span> <span>{h.open}–{h.close}</span>
+                </li>
+              ))
+            }
+            {
+              site.closedDays.map((d) => (
+                <li>
+                  <span>{dayName(d)}</span> <span>{ui.kapali}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </dd>
+      </div>
+      <div>
+        <dt><Icon name="phone" /> {ui.telefon}</dt>
+        <dd>
+          <a href={telLink()}>{site.phoneDisplay}</a>
+        </dd>
+      </div>
+      <div>
+        <dt><Icon name="whatsapp" /> {ui.whatsappEtiket}</dt>
+        <dd>
+          <a href={waLink(ui.wa.bilgi)}>{site.whatsappDisplay}</a>
+        </dd>
+      </div>
+      <div>
+        <dt><Icon name="whatsapp" /> {ui.ofisYetkilisi}</dt>
+        <dd>
+          <a href={officeWaLink(ui.wa.bilgi)}>{site.office.display}</a>
+        </dd>
+      </div>
+    </dl>
+    <div class="contact__cta">
+      <a class="sponge" href={waLink(ui.wa.bilgi)}>
+        <Icon name="whatsapp" />
+        {ui.whatsappEtiket}
+      </a>
+      <a class="sponge sponge--mint" href={officeWaLink(ui.wa.bilgi)}>
+        <Icon name="whatsapp" />
+        {ui.ofisButonu}
+      </a>
+      <a class="sponge sponge--light" href={directionsUrl} target="_blank" rel="noopener">
+        <Icon name="pin" />
+        {m.iletisimBlogu.konumButonu}
+      </a>
+    </div>
+  </div>
+  <div class="contact__map pillow">
+    <iframe src={mapEmbedUrl} title={`${site.name} ${ui.haritaBasligi}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+</div>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: stretch;
+  }
+  dl {
+    margin: 0 0 1.75rem;
+    display: grid;
+    gap: 1.1rem;
+  }
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    color: var(--bordo);
+  }
+  dt :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  dd {
+    margin: 0.2rem 0 0 1.6rem;
+  }
+  dd ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.15rem;
+    max-width: 20rem;
+  }
+  dd li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .contact__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .contact__map {
+    min-height: 22rem;
+    overflow: hidden;
+  }
+  .contact__map iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 22rem;
+    border: 0;
+  }
+  @media (max-width: 47.99rem) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

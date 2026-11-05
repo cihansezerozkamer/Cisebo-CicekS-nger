@@ -1,0 +1,126 @@
+---
+import Icon from './Icon.astro';
+import { waLink } from '../data/site';
+import { useLang, y } from '../i18n';
+const { m: all, ui, href } = useLang(Astro.url);
+const m = all.giris;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="hero pores">
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <h1>{y(m.baslik)}</h1>
+      <p class="lead">{y(m.aciklama)}</p>
+      <div class="hero__cta">
+        <a class="sponge" href={waLink(ui.wa.siparis)}>
+          <Icon name="whatsapp" />
+          {m.siparisButonu}
+        </a>
+        <a class="sponge sponge--light" href={href('urunler')}>{m.urunlerButonu}</a>
+      </div>
+      <ul class="hero__facts">
+        {m.maddeler.map((x) => <li>{y(x)}</li>)}
+      </ul>
+    </div>
+
+    <figure class="hero__media">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster={`${base}/video/poster/kirpinti-avuc.jpg`}
+        aria-label={m.videoAltYazisi}
+      >
+        <source src={`${base}/video/kirpinti-avuc.mp4`} type="video/mp4" />
+      </video>
+      <figcaption>{m.videoAltYazisi}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 7vw, 5.5rem);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+  }
+  .hero__text h1 {
+    max-width: 13ch;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    color: var(--ink-soft);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .hero__facts li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hero__facts li::before {
+    content: '';
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--mint);
+    box-shadow: 0 0 0 2px var(--bordo);
+  }
+
+  .hero__media {
+    margin: 0;
+    justify-self: end;
+    width: min(100%, 24rem);
+  }
+  .hero__media video {
+    width: 100%;
+    aspect-ratio: 9 / 15;
+    object-fit: cover;
+    /* yastık köşesi: düz değil, hafif şişkin */
+    border-radius: 42% 42% 40% 40% / 18% 18% 16% 16%;
+    box-shadow: 0 0 0 0.6rem var(--pembe-acik), 0 40px 60px -30px rgba(79, 16, 34, 0.55);
+    background: var(--mint);
+  }
+  .hero__media figcaption {
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: var(--t-sm);
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__media {
+      order: -1;
+      justify-self: center;
+      width: min(100%, 14rem);
+    }
+    .hero__media video {
+      aspect-ratio: 1 / 1;
+      border-radius: 38%;
+    }
+    .hero__cta > :global(*) {
+      flex: 1 1 12rem;
+    }
+  }
+</style>

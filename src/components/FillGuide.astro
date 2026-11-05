@@ -1,0 +1,137 @@
+---
+import type { Product } from '../data/products';
+import { waLink } from '../data/site';
+import { useLang, fill } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  headingLevel?: 'h2' | 'h3';
+}
+const { headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+
+const { m: all, ui, href, bySlug, lang } = useLang(Astro.url);
+const m = all.rehber;
+const options = m.secenekler.map((o, i) => ({
+  key: `s${i}`,
+  label: o.ad,
+  why: o.aciklama,
+  calc: o.hesapla,
+  // products.ts'de bulunmayan ürün kodları sessizce atlanır
+  picks: o.oneriler.map(bySlug).filter((p): p is Product => Boolean(p)),
+}));
+---
+
+<div class="guide" data-guide>
+  <H class="guide__q">{m.baslik}</H>
+  <div class="guide__chips" role="group" aria-label="Doldurulacak ürün">
+    {
+      options.map((o, i) => (
+        <button type="button" class="sponge sponge--sm chip" aria-pressed={i === 0 ? 'true' : 'false'} data-key={o.key}>
+          {o.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="guide__panels" aria-live="polite">
+    {
+      options.map((o, i) => (
+        <div class="guide__panel pillow" data-panel={o.key} hidden={i !== 0}>
+          <p class="guide__why">{o.why}</p>
+          <ul class="guide__picks">
+            {o.picks.map((p, j) => (
+              <li>
+                <span class="guide__rank">{j === 0 ? m.onerimizEtiketi : m.alternatifEtiketi}</span>
+                <a href={href(`urunler/${p.slug}`)}>{p.name}</a>
+                <span class="muted">{p.short}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="guide__actions">
+            {o.calc && (
+              <a class="sponge sponge--sm sponge--mint" href={href('hangi-dolgu#hesapla')}>
+                {m.hesaplaButonu}
+              </a>
+            )}
+            <a class="sponge sponge--sm" href={waLink(fill(ui.wa.rehber, { ne: lang === 'de' ? o.label : o.label.toLocaleLowerCase(lang) }))}>
+              <Icon name="whatsapp" />
+              {m.sorButonu}
+            </a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-guide]').forEach((root) => {
+    const chips = root.querySelectorAll<HTMLButtonElement>('[data-key]');
+    const panels = root.querySelectorAll<HTMLElement>('[data-panel]');
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        const key = chip.dataset.key;
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        panels.forEach((p) => (p.hidden = p.dataset.panel !== key));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .guide__q {
+    font-size: var(--t-2xl);
+  }
+  .guide__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .guide__panel {
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+  .guide__why {
+    font-size: var(--t-lg);
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .guide__picks {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 0.75rem;
+  }
+  .guide__picks li {
+    display: grid;
+    gap: 0.15rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--r-soft);
+    background: var(--beyaz);
+  }
+  .guide__picks li:first-child {
+    background: var(--mint);
+  }
+  .guide__rank {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .guide__picks a {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  .guide__picks .muted {
+    font-size: var(--t-sm);
+  }
+  .guide__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+</style>
