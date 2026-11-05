@@ -24,6 +24,8 @@ export const site = {
   },
   geo: { lat: 38.374835, lng: 27.1375738 },
   googlePlaceId: 'ChIJ1Z2Dv0nfuxQRnQdxyTeFcx0',
+  // Google Haritalar kaydının kalıcı adresi (işletme verisinde sameAs olarak kullanılır)
+  googleMapsUrl: 'https://maps.google.com/?cid=2122186324070959005',
   // gün numaraları: 1 = Pazartesi … 7 = Pazar
   hours: [
     { days: [1, 2, 3, 4, 5], open: '08:00', close: '19:00' },

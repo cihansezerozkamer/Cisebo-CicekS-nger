@@ -17,6 +17,8 @@ export type Unit = 'kg' | 'çuval' | 'adet';
 
 export interface ProductText {
   name: string;
+  /** Google arama başlığı (sekme başlığı). Boşsa ürün adı kullanılır. */
+  seoTitle?: string;
   short: string;
   intro: string;
   uses: string[];
@@ -43,6 +45,7 @@ const urunler: (ProductBase & ProductText)[] = [
   {
     slug: 'kirpinti-sunger',
     name: 'Kırpıntı Sünger',
+    seoTitle: 'Kırpıntı Sünger Kilo Fiyatı, Toptan ve Perakende',
     short: 'Kırlent, minder ve pet yatağı için kiloyla dolgu.',
     intro:
       'Plaka kesimlerinden çıkan temiz sünger parçaları. Kırlent, minder, pet yatağı ve oyuncak dolgusunda en çok tercih edilen, ekonomik dolgu. Hazır kırlent iç yastıklarımızda da bunu kullanıyoruz.',
@@ -67,6 +70,7 @@ const urunler: (ProductBase & ProductText)[] = [
   {
     slug: 'kirlent-ic-yastigi',
     name: 'Hazır Dolu Kırlent İç Yastığı',
+    seoTitle: 'Hazır Kırlent İç Yastığı 55×55, 65×65 Toptan',
     short: '55×55, 65×65 ve isteğe göre farklı ölçüler, tela içi hazır dolu.',
     intro:
       'Tela kılıfın içine kırpıntı sünger ya da kırpıntı sünger ile boncuk silikon karışımı doldurulmuş hazır kırlent iç yastıkları. Kendi kılıfınıza takıp hemen kullanabilirsiniz. İsteğe göre farklı ölçülerde de hazırlıyoruz.',
@@ -94,6 +98,7 @@ const urunler: (ProductBase & ProductText)[] = [
   {
     slug: 'kiloluk-sunger',
     name: 'Kiloluk Tabaka Sünger',
+    seoTitle: 'Kiloluk Tabaka Sünger, Kilo ile Toptan Satış',
     short: 'Tabaka ve parça sünger, kilo ile.',
     intro:
       'Üretimden artan tabaka ve büyük parça süngerler. Döşeme altı, ambalaj, minder ve kendi işini yapanlar için ekonomik çözüm. Kilo ile tartılır, çuvalla ya da balya hâlinde verilir.',
@@ -122,6 +127,7 @@ const urunler: (ProductBase & ProductText)[] = [
   {
     slug: 'boncuk-silikon',
     name: 'Boncuk Silikon & Elyaf',
+    seoTitle: 'Boncuk Silikon ve Elyaf Kilo Fiyatı, Toptan',
     short: 'Yastık ve kırlent için yumuşak, kabarık dolgu.',
     intro:
       'Boncuk silikon küçük toplar hâlindedir, kolay topaklanmaz ve kabarık durur. Yastık, kırlent ve peluş oyuncak için ideal. Daha ekonomik seçenek olarak fire elyaf da var.',
@@ -144,6 +150,7 @@ const urunler: (ProductBase & ProductText)[] = [
   {
     slug: 'visko-yastik',
     name: 'Visko Yastık',
+    seoTitle: 'Visko Yastık 60×40, Hafızalı Sünger Yastık',
     short: 'Boyun ve baş şeklini alan visko yastık, 60×40.',
     intro:
       'Visko (hafızalı) sünger yastık. Başınızın ve boynunuzun şeklini alır, kaldırınca yavaşça eski hâline döner. Trendyol ve Hepsiburada’daki ÇisebO mağazamızda da satılıyor.',

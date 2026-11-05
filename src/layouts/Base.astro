@@ -4,6 +4,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppBar from '../components/WhatsAppBar.astro';
 import Splash from '../components/Splash.astro';
+import { getImage } from 'astro:assets';
+import logoYuz from '../assets/img/logo-yuz.png';
+import kirpintiImg from '../assets/img/kirpinti-torba.jpg';
 import { site, directionsUrl } from '../data/site';
 import { useLang, langs, langInfo, switchLang, hrefFor, y } from '../i18n';
 
@@ -16,13 +19,21 @@ interface Props {
   ogImage?: string;
   /** ana sayfa mı (başlık biçimi değişir) */
   home?: boolean;
+  /** 404 gibi dizine girmemesi gereken sayfalar */
+  noindex?: boolean;
 }
 
 const { lang, m, ui } = useLang(Astro.url);
-const { title, description = y(m.giris.aciklama), schema = [], waMessage, ogImage, home = false } = Astro.props;
+const { title, description = y(m.giris.aciklama), schema = [], waMessage, ogImage, home = false, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const homeUrl = new URL(hrefFor('', 'tr'), Astro.site).href;
 const fullTitle = home ? `${site.name} | ${ui.siteBasligi}` : `${title} | ${site.name}`;
+
+// İşletme verisi için logo ve görsel (tam adres)
+const logoImg = await getImage({ src: logoYuz, width: 512, height: 512, format: 'png' });
+const shopImg = await getImage({ src: kirpintiImg, width: 1200, format: 'jpg' });
+const abs = (p: string) => new URL(p, Astro.site).href;
+const sameAs = [site.googleMapsUrl, ...site.onlineStores.map((s) => s.url).filter(Boolean)];
 
 const a = site.address;
 const dayCodes = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -35,6 +46,9 @@ const localBusiness = {
   description: y(m.giris.aciklama),
   url: homeUrl,
   telephone: site.phoneE164,
+  logo: abs(logoImg.src),
+  image: [abs(shopImg.src)],
+  sameAs,
   address: {
     '@type': 'PostalAddress',
     streetAddress: `${a.neighborhood} ${a.street}`,
@@ -67,9 +81,10 @@ const jsonLd = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    {langs.map((l) => <link rel="alternate" hreflang={langInfo[l].htmlLang} href={new URL(switchLang(Astro.url, l), Astro.site).href} />)}
-    <link rel="alternate" hreflang="x-default" href={new URL(switchLang(Astro.url, 'tr'), Astro.site).href} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {!noindex && langs.map((l) => <link rel="alternate" hreflang={langInfo[l].htmlLang} href={new URL(switchLang(Astro.url, l), Astro.site).href} />)}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL(switchLang(Astro.url, 'tr'), Astro.site).href} />}
     <meta name="theme-color" content="#f6dcdc" />
     <link rel="icon" href={hrefFor('favicon.svg', 'tr')} type="image/svg+xml" />
     <link rel="sitemap" href={hrefFor('sitemap-index.xml', 'tr')} />
@@ -80,7 +95,7 @@ const jsonLd = [
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site).href} />}
+    <meta property="og:image" content={abs(ogImage ?? shopImg.src)} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

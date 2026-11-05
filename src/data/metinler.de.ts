@@ -4,7 +4,7 @@ import type { Metinler } from './metinler';
 export const metinler: Metinler = {
   giris: {
     baslik: "Schaumstoffflocken und Kissen-Inlets, alles nach Kilo.",
-    aciklama: "Çiçek Sünger verkauft seit {yil} Jahren Schaumstoffflocken, fertige Kissen-Inlets 55×55, 65×65 und auf Wunsch in anderen Größen, Schaumstoffplatten nach Kilo und Kugelfaser. Im Sack oder als LKW-Ladung, in die ganze Türkei und nach Deutschland.",
+    aciklama: "Çiçek Sünger aus Buca, İzmir verkauft seit {yil} Jahren Schaumstoffflocken, fertige Kissen-Inlets 55×55, 65×65 und auf Wunsch in anderen Größen, Schaumstoffplatten nach Kilo und Kugelfaser. Im Sack oder als LKW-Ladung, in die ganze Türkei und nach Deutschland.",
     siparisButonu: "Per WhatsApp bestellen",
     urunlerButonu: "Produkte ansehen",
     maddeler: [
@@ -219,7 +219,10 @@ export const metinler: Metinler = {
     menuButonu: "Menü",
     icerigeGec: "Zum Inhalt",
     dil: "Sprache",
-    siteBasligi: "Schaumstoffflocken, Kissen-Inlets, Schaumstoff nach Kilo",
+    siteBasligi: "Schaumstoffflocken, Kissen-Inlets, Schaumstoff nach Kilo aus İzmir",
+    konumEki: "Aus Buca, İzmir: Versand per Spedition in die ganze Türkei und nach Deutschland.",
+    bulunamadiBaslik: "Diese Seite gibt es nicht",
+    bulunamadiMetin: "Die Adresse hat sich geändert oder existiert nicht. Sehen Sie sich unsere Produkte an oder schreiben Sie uns auf WhatsApp.",
     altUrunler: "Produkte",
     onlineMagaza: "Unser Online-Shop",
     altSayfalar: "Seiten",

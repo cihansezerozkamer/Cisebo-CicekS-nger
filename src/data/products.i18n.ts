@@ -5,6 +5,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
   de: {
     'kirpinti-sunger': {
       name: 'Schaumstoffflocken',
+      seoTitle: 'Schaumstoffflocken nach Kilo, Großhandel',
       short: 'Füllung nach Kilo für Kissen, Sitzkissen und Tierbetten.',
       intro:
         'Saubere Schaumstoffstücke aus dem Plattenzuschnitt. Die beliebteste und günstigste Füllung für Kissen, Sitzkissen, Tierbetten und Spielzeug. Auch unsere fertigen Kissen-Inlets sind damit gefüllt.',
@@ -24,6 +25,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'kirlent-ic-yastigi': {
       name: 'Gefüllte Kissen-Inlets',
+      seoTitle: 'Kissen-Inlets 55×55, 65×65 im Großhandel',
       short: '55×55, 65×65 und Wunschgrößen, im Vlies fertig gefüllt.',
       intro:
         'Fertige Kissen-Inlets: Vliesbezug, gefüllt mit Schaumstoffflocken oder einer Mischung aus Flocken und Kugelfaser. Einfach in den eigenen Bezug stecken. Andere Größen fertigen wir auf Wunsch.',
@@ -46,6 +48,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'kiloluk-sunger': {
       name: 'Schaumstoffplatten nach Kilo',
+      seoTitle: 'Schaumstoffplatten nach Kilo, Großhandel',
       short: 'Platten und Reststücke, nach Kilo.',
       intro:
         'Schaumstoffplatten und große Reststücke aus der Produktion. Eine günstige Lösung für Polsterunterbau, Verpackung, Sitzkissen und Heimwerker. Nach Kilo gewogen, im Sack oder als Ballen geliefert.',
@@ -69,6 +72,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'boncuk-silikon': {
       name: 'Kugelfaser & Füllwatte',
+      seoTitle: 'Kugelfaser und Füllwatte nach Kilo',
       short: 'Weiche, bauschige Füllung für Kissen.',
       intro:
         'Kugelfaser besteht aus kleinen Faserbällchen, verklumpt kaum und bleibt bauschig. Ideal für Kopfkissen, Dekokissen und Plüschtiere. Günstiger ist unsere Restfaser-Füllwatte.',
@@ -86,6 +90,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'visko-yastik': {
       name: 'Viscoschaum-Kissen',
+      seoTitle: 'Viscoschaum-Kissen 60×40, Memory Foam',
       short: 'Viscoschaum-Kissen, passt sich Kopf und Nacken an, 60×40.',
       intro:
         'Kissen aus Viscoschaum (Memory Foam). Es passt sich Kopf und Nacken an und kehrt langsam in seine Form zurück. Auch in unserem ÇisebO-Shop auf Trendyol und Hepsiburada erhältlich.',
@@ -106,6 +111,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
   en: {
     'kirpinti-sunger': {
       name: 'Shredded Foam',
+      seoTitle: 'Shredded Foam by the Kilo, Wholesale',
       short: 'Fill by the kilo for cushions, floor cushions and pet beds.',
       intro:
         'Clean foam pieces from sheet cutting. The most popular and economical fill for cushions, floor cushions, pet beds and toys. Our ready-filled cushion inserts use it too.',
@@ -125,6 +131,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'kirlent-ic-yastigi': {
       name: 'Filled Cushion Inserts',
+      seoTitle: 'Cushion Inserts 55×55, 65×65 Wholesale',
       short: '55×55, 65×65 and custom sizes, ready-filled in non-woven fabric.',
       intro:
         'Ready-made cushion inserts: a non-woven cover filled with shredded foam, or a mix of shredded foam and ball fibre. Just slip them into your own cover. We also make custom sizes on request.',
@@ -147,6 +154,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'kiloluk-sunger': {
       name: 'Foam Sheets by the Kilo',
+      seoTitle: 'Foam Sheets by the Kilo, Wholesale',
       short: 'Sheets and offcuts, by the kilo.',
       intro:
         'Foam sheets and large offcuts from production. An economical choice for upholstery base, packaging, seat pads and DIY. Weighed by the kilo and supplied in sacks or bales.',
@@ -170,6 +178,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'boncuk-silikon': {
       name: 'Ball Fibre & Polyester Fill',
+      seoTitle: 'Ball Fibre and Polyester Fill by the Kilo',
       short: 'Soft, fluffy filling for pillows and cushions.',
       intro:
         'Ball fibre is made of small fibre balls, rarely clumps and stays fluffy. Ideal for pillows, cushions and plush toys. Our recycled polyester fill is a cheaper option.',
@@ -187,6 +196,7 @@ export const productTexts: Record<'de' | 'en', Record<string, ProductText>> = {
     },
     'visko-yastik': {
       name: 'Memory Foam Pillow',
+      seoTitle: 'Memory Foam Pillow 60×40',
       short: 'Memory foam pillow that follows your head and neck, 60×40.',
       intro:
         'A memory foam pillow that shapes to your head and neck and slowly returns to its form. Also sold in our ÇisebO store on Trendyol and Hepsiburada.',

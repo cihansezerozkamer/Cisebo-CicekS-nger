@@ -17,7 +17,7 @@ export const metinler = {
   // ---------- ANA SAYFA: en üst bölüm ----------
   giris: {
     baslik: "Kırpıntı sünger ve hazır kırlent, hepsi kiloyla.",
-    aciklama: "Çiçek Sünger {yil} yıldır kırpıntı sünger, 55×55, 65×65 ve isteğe göre farklı ölçülerde hazır kırlent iç yastığı, kiloluk tabaka sünger ve boncuk silikon satıyor. Çuvalla ya da TIR ile, Türkiye’nin her yerine.",
+    aciklama: "Çiçek Sünger {yil} yıldır İzmir Buca’da kırpıntı sünger, 55×55, 65×65 ve isteğe göre farklı ölçülerde hazır kırlent iç yastığı, kiloluk tabaka sünger ve boncuk silikon satıyor. Çuvalla ya da TIR ile, Türkiye’nin her yerine.",
     siparisButonu: "WhatsApp’tan sipariş",
     urunlerButonu: "Ürünleri gör",
     maddeler: [
@@ -254,7 +254,12 @@ export const metinler = {
     menuButonu: "Menü",
     icerigeGec: "İçeriğe geç",
     dil: "Dil",
-    siteBasligi: "Kırpıntı Sünger, Kırlent İç Yastığı, Kiloluk Sünger",
+    siteBasligi: "İzmir Kırpıntı Sünger, Kırlent İç Yastığı, Kiloluk Sünger",
+    // ürün sayfalarının Google açıklamasına eklenir
+    konumEki: "İzmir Buca’dan Türkiye’nin her yerine nakliye.",
+    // 404 sayfası
+    bulunamadiBaslik: "Aradığınız sayfa bulunamadı",
+    bulunamadiMetin: "Bu adres değişmiş ya da hiç olmamış olabilir. Ürünlerimize göz atın ya da WhatsApp’tan bize yazın.",
     altUrunler: "Ürünler",
     onlineMagaza: "Online mağazamız",
     altSayfalar: "Sayfalar",

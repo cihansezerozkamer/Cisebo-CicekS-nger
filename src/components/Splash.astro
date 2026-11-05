@@ -1,5 +1,5 @@
 ---
-// Açılış ekranı: ilk girişte 2 sn beyaz zeminde logo animasyonu.
+// Açılış ekranı: ilk girişte ~1,2 sn beyaz zeminde logo animasyonu (sayfa hızını az etkilesin diye kısa).
 // - Oturum başına bir kez gösterilir (sessionStorage), sayfa geçişlerinde tekrar çıkmaz.
 // - JavaScript kapalıysa ya da "hareketi azalt" açıksa hiç görünmez.
 import LogoMark from './LogoMark.astro';
@@ -31,8 +31,8 @@ import LogoMark from './LogoMark.astro';
       html.classList.add('intro-out');
       setTimeout(function () {
         html.classList.remove('intro', 'intro-out');
-      }, 500);
-    }, 2000);
+      }, 350);
+    }, 1200);
   })();
 </script>
 
@@ -47,7 +47,7 @@ import LogoMark from './LogoMark.astro';
     inset: 0;
     z-index: 1000;
     background: #fff;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    transition: opacity 0.35s ease, visibility 0.35s;
   }
   html.intro body {
     overflow: hidden;
@@ -64,15 +64,15 @@ import LogoMark from './LogoMark.astro';
   .splash__mark {
     width: min(46vw, 15rem);
     height: auto;
-    animation: splash-pop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+    animation: splash-pop 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both;
   }
   .splash__mark .logo__flower {
     transform-box: fill-box;
     transform-origin: center;
-    animation: splash-spin 1.8s cubic-bezier(0.45, 0.05, 0.35, 1) 0.2s both;
+    animation: splash-spin 1.1s cubic-bezier(0.45, 0.05, 0.35, 1) 0.1s both;
   }
   .splash__mark .logo__blush {
-    animation: splash-blush 0.8s ease 0.7s both;
+    animation: splash-blush 0.5s ease 0.45s both;
   }
   .splash__word {
     font-family: var(--font-display);
@@ -80,7 +80,7 @@ import LogoMark from './LogoMark.astro';
     font-weight: 700;
     font-size: clamp(1.6rem, 5vw, 2.2rem);
     color: var(--bordo);
-    animation: splash-word 0.6s ease 0.45s both;
+    animation: splash-word 0.4s ease 0.25s both;
   }
   @keyframes splash-pop {
     from {

@@ -4,7 +4,7 @@ import type { Metinler } from './metinler';
 export const metinler: Metinler = {
   giris: {
     baslik: "Shredded foam and cushion inserts, all by the kilo.",
-    aciklama: "For {yil} years Çiçek Sünger has sold shredded foam, ready-filled cushion inserts in 55×55, 65×65 or custom sizes, foam sheets by the kilo and ball fibre. By the sack or by the truckload, across Turkey and to Germany.",
+    aciklama: "For {yil} years Çiçek Sünger in Buca, İzmir has sold shredded foam, ready-filled cushion inserts in 55×55, 65×65 or custom sizes, foam sheets by the kilo and ball fibre. By the sack or by the truckload, across Turkey and to Germany.",
     siparisButonu: "Order on WhatsApp",
     urunlerButonu: "See products",
     maddeler: [
@@ -219,7 +219,10 @@ export const metinler: Metinler = {
     menuButonu: "Menu",
     icerigeGec: "Skip to content",
     dil: "Language",
-    siteBasligi: "Shredded Foam, Cushion Inserts, Foam by the Kilo",
+    siteBasligi: "Shredded Foam, Cushion Inserts, Foam by the Kilo from İzmir",
+    konumEki: "From Buca, İzmir: freight shipping across Turkey and to Germany.",
+    bulunamadiBaslik: "Page not found",
+    bulunamadiMetin: "This address has changed or never existed. Browse our products or message us on WhatsApp.",
     altUrunler: "Products",
     onlineMagaza: "Our online store",
     altSayfalar: "Pages",

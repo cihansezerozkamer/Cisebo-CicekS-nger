@@ -27,7 +27,7 @@ const breadcrumb = {
 };
 ---
 
-<Base title={p.name} description={`${p.intro} WhatsApp: ${site.phoneDisplay}`} schema={[breadcrumb]} waMessage={p.priceMessage} ogImage={og}>
+<Base title={p.seoTitle ?? p.name} description={`${p.intro} ${ui.konumEki}`} schema={[breadcrumb]} waMessage={p.priceMessage} ogImage={og}>
   <article class="wrap prod">
     <nav class="crumbs" aria-label={ui.anaSayfa}>
       <ol>
