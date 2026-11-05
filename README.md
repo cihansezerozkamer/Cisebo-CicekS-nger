@@ -25,8 +25,8 @@ npm run build    # dist/ klasörüne üretir
 ## Yayın
 
 `main` dalına gönderilince `.github/workflows/deploy.yml` siteyi GitHub Pages'e yayınlar:
-https://cihansezerozkamer.github.io/Cisebo-CicekS-nger/
+https://ciceksunger.com
 
-İlk sefer için: GitHub > Settings > Pages > Source: **GitHub Actions**.
-
-Kendi domain alınınca `astro.config.mjs` içinde `site` değiştirilir, `base` satırı silinir, `public/robots.txt` içindeki adres güncellenir.
+- GitHub > Settings > Pages > Source: **GitHub Actions**, Custom domain: `ciceksunger.com`
+- DNS (Spaceship): `@` için 4 A kaydı (185.199.108–111.153), `www` için CNAME → `cihansezerozkamer.github.io`
+- `public/google20bc2cd04791dfca.html` Search Console doğrulama dosyasıdır, silinmemeli.

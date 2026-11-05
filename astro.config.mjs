@@ -2,11 +2,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Ücretsiz GitHub Pages adresi. Kendi domain alınınca:
-// site: 'https://ciceksunger.com' yapılır, base satırı silinir.
+// Kendi domainimiz: ciceksunger.com (GitHub Pages'e Spaceship DNS ile bağlı)
 export default defineConfig({
-  site: 'https://cihansezerozkamer.github.io',
-  base: '/Cisebo-CicekS-nger',
+  site: 'https://ciceksunger.com',
   trailingSlash: 'always',
   integrations: [sitemap()],
 });
